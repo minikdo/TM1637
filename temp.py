@@ -7,6 +7,7 @@ from time import sleep
 
 import tm1637
 
+# Rpi: GPIO3, GPIO2
 disp = tm1637.TM1637(3, 2)
 
 URL = 'http://panel.minik.pl/get_metar'
