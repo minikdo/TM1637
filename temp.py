@@ -2,6 +2,7 @@ import sys, os
 import tm1637
 import requests
 from time import sleep
+from requests.exceptions import ConnectionError, HTTPError
 
 disp = tm1637.TM1637(3, 2)
 
@@ -9,7 +10,13 @@ URL = 'http://panel.minik.pl/get_metar'
 
 
 def get_temp(url):
-    r = requests.get(url)
+    try:
+        r = requests.get(url)
+    except ConnectionError, HTTPError:
+        return [' ', 'E', 'r', 'r']
+
+    if r.status_code != 200:
+       return [' ', ' ', ' ', '-']
 
     temp = r.json()['temp']
 
