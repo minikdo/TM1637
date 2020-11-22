@@ -50,6 +50,7 @@ def get_temp(url):
 
 def main():
     while True:
+        disp.clear()
         disp.set_values(get_temp(URL))
 #       disp.set_values(['T', 'E', 'S', 'T'])
         sleep(300)  # 5 minutes
