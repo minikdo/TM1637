@@ -13,26 +13,13 @@ disp = tm1637.TM1637(3, 2)
 URL = 'http://panel.minik.pl/get_metar'
 
 
-def get_temp(url):
-    """ Gets json with METAR weather """
-
-    try:
-        r = requests.get(url)
-    except ConnectionError, HTTPError:
-        return [' ', 'E', 'r', 'r']
-
-    if r.status_code != 200:
-        return [' ', ' ', ' ', '-']
-
-    # Get outside temperature
-    temp = r.json()['temp']
-
-    temp_list = list(str(temp))
+def display(string):
+    char_list = list(str(string))
 
     new_list = []
 
     # Check if the value is int or not
-    for x in temp_list:
+    for x in char_list:
         try:
             y = int(x)
         except ValueError:
@@ -43,19 +30,34 @@ def get_temp(url):
     # Add leading spaces to keep 4 characters
     if len(new_list) < 4:
         free = 4 - len(new_list)
-    for a in range(free):
-        new_list.insert(0, ' ')
+        for a in range(free):
+            new_list.insert(0, ' ')
 
     return new_list
 
+
+def get_metar(url):
+    """ Gets json with METAR weather """
+
+    try:
+        r = requests.get(url)
+    except ConnectionError, HTTPError:
+        return [' ', 'E', 'r', 'r']
+
+    if r.status_code != 200:
+        return [' ', ' ', ' ', '-']
+
+    return r.json()
+
+
 def main():
     while True:
+        metar = get_metar(URL)
         disp.clear()
-        disp.set_values(get_temp(URL))
-#       disp.set_values(['T', 'E', 'S', 'T'])
-        sleep(300)  # 5 minutes
-        disp.clear()
-        sleep(1)
+        disp.set_values(display(metar['press']))
+        sleep(3)
+        disp.set_values(display(metar['temp']))
+        sleep(300)
 
 
 if __name__ == "__main__":
