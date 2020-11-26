@@ -14,6 +14,8 @@ URL = 'http://panel.minik.pl/get_metar'
 
 
 def display(string):
+    """ Returns a four element list to be displayed. """
+
     char_list = list(str(string))
 
     new_list = []
@@ -39,15 +41,18 @@ def display(string):
 def get_metar(url):
     """ Gets json with METAR weather """
 
+    output['temp'] = '-'
+    output['press'] = '-'
+    
     try:
         r = requests.get(url)
     except ConnectionError, HTTPError:
-        return [' ', 'E', 'r', 'r']
+        return output['temp'] = 'Err'
 
     if r.status_code != 200:
-        return [' ', ' ', ' ', '-']
+        return output['temp'] = r.status_code
 
-    return r.json()
+    return output
 
 
 def main():
