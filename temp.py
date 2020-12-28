@@ -41,16 +41,20 @@ def display(string):
 def get_metar(url):
     """ Gets json with METAR weather """
 
-    output['temp'] = '-'
-    output['press'] = '-'
+    output = {'temp': '-',
+              'press': '-'}
     
     try:
         r = requests.get(url)
     except ConnectionError, HTTPError:
-        return output['temp'] = 'Err'
+        output['temp'] = 'Err'
+        print 'Connection error'
+        return output
 
     if r.status_code != 200:
-        return output['temp'] = r.status_code
+        output['press'] = r.status_code
+    else:
+        output = r.json()
 
     return output
 
@@ -59,7 +63,9 @@ def main():
     while True:
         metar = get_metar(URL)
         disp.clear()
-        disp.set_values(display(metar['press']))
+        disp.set_values(display(int(metar['press'])))
+	# print(type(metar['press']))
+	# print(metar['press'])
         sleep(3)
         disp.set_values(display(metar['temp']))
         sleep(300)
