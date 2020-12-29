@@ -42,8 +42,8 @@ def get_metar(url):
     """ Gets json with METAR weather """
 
     output = {'temp': '-',
-              'press': '-'}
-    
+              'press': '0'}
+
     try:
         r = requests.get(url)
     except ConnectionError, HTTPError:
